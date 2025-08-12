@@ -1,0 +1,56 @@
+-- Part A: Create Department and Course Tables with Normalization (up to 3NF)
+
+-- Create the Departments table
+CREATE TABLE IF NOT EXISTS Departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50) UNIQUE
+);
+
+-- Create the Courses table
+CREATE TABLE IF NOT EXISTS Courses (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(100),
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES Departments(dept_id)
+);
+
+-- Part B: Insert Sample Data into Department and Course Tables
+
+-- Insert data into Departments table
+INSERT INTO Departments (dept_id, dept_name) VALUES
+(1, 'Computer Science'),
+(2, 'Electrical'),
+(3, 'Mechanical'),
+(4, 'Civil'),
+(5, 'Electronics');
+
+-- Insert data into Courses table
+INSERT INTO Courses (course_id, course_name, dept_id) VALUES
+(101, 'DBMS', 1),
+(102, 'Operating Systems', 1),
+(103, 'Power Systems', 2),
+(104, 'Digital Circuits', 2),
+(105, 'Thermodynamics', 3),
+(106, 'Fluid Mechanics', 3),
+(107, 'Structural Engineering', 4),
+(108, 'Surveying', 4),
+(109, 'Embedded Systems', 5),
+(110, 'VLSI Design', 5);
+
+-- Part C: Retrieve Departments Offering More Than Two Courses Using Subquery
+
+SELECT dept_name
+FROM Departments
+WHERE dept_id IN (
+    SELECT dept_id
+    FROM Courses
+    GROUP BY dept_id
+    HAVING COUNT(course_id) > 2
+);
+
+-- Part D: Grant SELECT Access on Courses Table Using DCL
+
+-- Ensure the user 'viewer_user' exists before granting permissions
+-- CREATE USER 'viewer_user'@'localhost' IDENTIFIED BY 'password';
+
+GRANT SELECT ON Courses TO 'viewer_user'@'localhost';
